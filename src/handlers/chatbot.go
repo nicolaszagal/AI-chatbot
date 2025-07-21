@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"chatbot/services"
-	"chatbot/utils"
+	"chatbot/src/services"
+	"chatbot/src/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
