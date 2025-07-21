@@ -1,0 +1,1 @@
+ Continuando tenemos lo que vendría a ser nuestro tuy senario mappinc para el segmento de mesero, en el cual hemos distinguido las fases de atención al cliente, entrega de comida, estar atento a los pedidos y ordenas, y el pago de cada cliente, en el cual podemos destacar lo que cada segmento realizaría, qué hace, qué piensa y qué siente.

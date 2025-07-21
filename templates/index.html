@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Chatbot de Prueba</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chat-container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #e6f7ff;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #f0f0f0;
+        }
+        .input-area {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        #user-question {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .example {
+            cursor: pointer;
+            color: #0066cc;
+            margin: 5px 0;
+        }
+        .example:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Chatbot</h1>
+<div class="chat-container" id="chat-container">
+    <div class="message bot-message">
+        ¡Hola! Soy un chatbot creado como prueba de concepto. ¿Cómo puedo ayudarte hoy?
+    </div>
+</div>
+
+<div class="input-area">
+    <input type="text" id="user-question" placeholder="Escribe tu pregunta aquí...">
+    <button onclick="askQuestion()">Enviar</button>
+</div>
+
+<script>
+    function askQuestion() {
+        const questionInput = document.getElementById('user-question');
+        const question = questionInput.value.trim();
+
+        if (!question) return;
+
+        // Agregar mensaje del usuario al chat
+        addMessageToChat(question, 'user');
+        questionInput.value = '';
+
+        // Enviar pregunta al servidor
+        fetch('/get_answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ question: question }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Agregar respuesta del bot al chat
+                addMessageToChat(data.answer, 'bot');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessageToChat('Lo siento, ha ocurrido un error al procesar tu pregunta.', 'bot');
+            });
+    }
+
+    function addMessageToChat(message, sender) {
+        const chatContainer = document.getElementById('chat-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(sender + '-message');
+        messageDiv.textContent = message;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function fillQuestion(question) {
+        const questionInput = document.getElementById('user-question');
+        questionInput.value = question;
+        questionInput.focus();
+    }
+
+    // Permitir enviar con Enter
+    document.getElementById('user-question').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            askQuestion();
+        }
+    });
+</script>
+</body>
+</html>
